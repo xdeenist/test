@@ -27,7 +27,7 @@ AppAsset::register($this);
 <div class="wrap">
     <?php
     NavBar::begin([
-        'brandLabel' => 'My Company',
+        'brandLabel' => 'Phonebook',
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
@@ -36,14 +36,28 @@ AppAsset::register($this);
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
-            ['label' => 'Home', 'url' => ['/site/index']],
-            ['label' => 'About', 'url' => ['/site/about']],
-            ['label' => 'Contact', 'url' => ['/site/contact']],
             Yii::$app->user->isGuest ? (
-                ['label' => 'Login', 'url' => ['/site/login']]
+                ['label' => '', 'url' => ['#']]
+            ) : (
+                ['label' => 'My Phonebook', 'url' => ['/phone/phonebook']]
+            ),
+            Yii::$app->user->isGuest ? (
+                ['label' => '', 'url' => ['#']]
+            ) : (
+                ['label' => 'Create contact', 'url' => ['/phone/create']]
+            ),
+            Yii::$app->user->isGuest ? (
+                ['label' => 'Home', 'url' => ['/site/index']]
+            ) : (
+                ['label' => 'Home', 'url' => ['/phone/phonebook']]
+            ),
+            // ['label' => 'About', 'url' => ['/site/about']],
+            // ['label' => 'Contact', 'url' => ['/site/contact']],
+            Yii::$app->user->isGuest ? (
+                ['label' => 'Login', 'url' => ['/user/login']]
             ) : (
                 '<li>'
-                . Html::beginForm(['/site/logout'], 'post')
+                . Html::beginForm(['/user/logout'], 'post')
                 . Html::submitButton(
                     'Logout (' . Yii::$app->user->identity->username . ')',
                     ['class' => 'btn btn-link logout']
@@ -66,9 +80,9 @@ AppAsset::register($this);
 
 <footer class="footer">
     <div class="container">
-        <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
+        <p class="pull-left">&copy; I <?= date('Y') ?></p>
 
-        <p class="pull-right"><?= Yii::powered() ?></p>
+        <!-- <p class="pull-right"><?= Yii::powered() ?></p> -->
     </div>
 </footer>
 
