@@ -28,7 +28,7 @@ $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); 
 
 <div class="copy-fields hide" >
     <div class="control-group input-group" style="margin-top:10px">
-        <input type="text" name="phone[]" class="form-control phone-field" placeholder="Enter Phone Here" id="phone-field">
+        <input type="text" name="phone[]" class="form-control phone-field" placeholder="Enter Phone Here">
         <div class="input-group-btn">
             <button class="btn btn-danger remove" type="button"><i class="glyphicon glyphicon-remove"></i> Remove</button>
         </div>
@@ -36,12 +36,12 @@ $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); 
 </div>
 
 <br/>
-    <br/>
-    <br/>
+<!--     <br/>
+    <br/> -->
 
 <?php if (isset($phones)) {
     foreach ($phones as $val) { if (!empty($val->phone)){
-    echo "<div>".Html::a($val->phone) . " " . "<a href='#' class='rem_res glyphicon glyphicon-trash' ph_id='". $val->phone_id ."'></a></div><br/>";
+    echo "<div>".Html::tag('a', $val->phone, ['class' => 'phonn']) . " " . "<a href='#' class='rem_res glyphicon glyphicon-trash' ph_id='". $val->phone_id ."'></a> <a href='#' class='upd_res glyphicon glyphicon-pencil' phn_id='". $val->phone_id ."' value='" . $val->phone . "'></a></div><br/>";
 }}}?>
 
 
@@ -83,6 +83,34 @@ $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); 
                 }
             });
 
+            return false;
+        });
+
+        $('.upd_res').click(function () {
+
+            var phn = $(this);
+            var phn_id = phn.attr('phn_id');
+            var phn_val = phn.attr('value');
+            
+            $.ajax({
+                url: '<?php echo Url::toRoute('remove-phones'); ?>',
+                data: {'ph_id': phn_id},
+                method: 'post',
+                success: function(data){
+                    phn.parent().remove();
+                }
+            });
+            var html = $(".copy-fields").html();
+            // $(".copy-fields").attr('id', phn_id);
+            // console.log(html);
+            $(".after-add-more").after('<div class="control-group input-group" style="margin-top:10px">'+
+                '<input type="text" name="phone[]" class="form-control phone-field" id="'+ phn_id +'" placeholder="Enter Phone Here">'+
+                '<div class="input-group-btn">'+
+                '<button class="btn btn-danger remove" type="button"><i class="glyphicon glyphicon-remove">'+
+                '</i> Remove</button>'+
+                '</div>'+
+                '</div>');
+            $('#'+phn_id).val(phn_val);
             return false;
         });
     });
